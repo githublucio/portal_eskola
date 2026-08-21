@@ -77,14 +77,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+# Local/dev default: PostgreSQL. PythonAnywhere free: set DB_ENGINE=mysql
+DB_ENGINE = env("DB_ENGINE", default="django.db.backends.postgresql")
+if DB_ENGINE in {"mysql", "django.db.backends.mysql"}:
+    DB_ENGINE = "django.db.backends.mysql"
+    try:
+        import pymysql
+
+        pymysql.install_as_MySQLdb()
+    except ImportError:
+        pass
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": DB_ENGINE,
         "NAME": env("DB_NAME"),
         "USER": env("DB_USER"),
         "PASSWORD": env("DB_PASSWORD"),
         "HOST": env("DB_HOST", default="localhost"),
         "PORT": env("DB_PORT", default="5432"),
+        "OPTIONS": {"charset": "utf8mb4"}
+        if DB_ENGINE == "django.db.backends.mysql"
+        else {},
     }
 }
 
