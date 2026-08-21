@@ -1,0 +1,59 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Painél{% endblock %}
+
+{% block dashboard_content %}
+<h1 class="h3 mb-4">Painél</h1>
+
+{% if stat_cards %}
+  <div class="row g-3 mb-4">
+    {% for card in stat_cards %}
+      <div class="col-6 col-lg-3">
+        <a class="stat-card d-block h-100" href="{% url card.url_name %}">
+          <div class="stat-value">{{ card.value }}</div>
+          <div class="stat-label">{{ card.label }}</div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-secondary">Laiha estatístika ba papél ita-nia.</p>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="info-panel h-100">
+      <h2 class="h5 mb-3">Eventu oin mai sira</h2>
+      {% if upcoming_events %}
+        <ul class="list-unstyled mb-0">
+          {% for event in upcoming_events %}
+            <li class="mb-2">
+              <div class="fw-semibold">{{ event.title }}</div>
+              <div class="small text-secondary">{{ event.start_at|date:"d-m-Y H:i" }}</div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-secondary mb-0">Laiha eventu oin mai.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="info-panel h-100">
+      <h2 class="h5 mb-3">Atividade foin daudauk</h2>
+      {% if recent_activity %}
+        <ul class="list-unstyled mb-0 small">
+          {% for item in recent_activity %}
+            <li class="mb-2 border-bottom pb-2">
+              <strong>{{ item.user|default:"sistema" }}</strong> · {{ item.get_action_display }}
+              <div class="text-secondary">{{ item.created_at|date:"d-m-Y H:i" }} {% if item.message %}— {{ item.message }}{% endif %}</div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-secondary mb-0">Laiha atividade atu hatudu.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

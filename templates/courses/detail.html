@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.name }} | {{ school.short_name|default:school.name }}{% endblock %}
+{% block meta_description %}{{ course.description|default:course.name|truncatechars:150 }}{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container">
+    <p class="small text-secondary mb-2">
+      <a href="{% url 'courses:list' %}">Kursu sira</a> · {{ course.department.name }}
+    </p>
+    <h1 class="display-6 mb-2">{{ course.name }}</h1>
+    <p class="text-secondary mb-0">{{ course.code }}{% if course.qualification %} · {{ course.qualification }}{% endif %}</p>
+  </div>
+</section>
+
+<section class="pb-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        {% if course.image %}
+          <img src="{{ course.image.url }}" alt="{{ course.name }}" class="img-fluid rounded mb-4 course-hero-image">
+        {% endif %}
+        {% if course.description %}
+          <div class="content-body mb-4">{{ course.description|linebreaks }}</div>
+        {% endif %}
+        {% if course.requirements %}
+          <h2 class="h5 mb-2">Rekizitu sira</h2>
+          <div class="content-body mb-4">{{ course.requirements|linebreaks }}</div>
+        {% endif %}
+
+        <h2 class="h5 mb-3">Disiplina sira</h2>
+        {% with subjects=course.subjects.all %}
+          {% if subjects %}
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>Kódigu</th>
+                    <th>Naran</th>
+                    <th>Períodu</th>
+                    <th>Kréditu</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subject in subjects %}
+                    {% if subject.is_active %}
+                      <tr>
+                        <td>{{ subject.code }}</td>
+                        <td>{{ subject.name }}</td>
+                        <td>{{ subject.semester }}</td>
+                        <td>{{ subject.credits }}</td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-secondary mb-0">Disiplina sira seidauk publika.</p>
+          {% endif %}
+        {% endwith %}
+      </div>
+      <div class="col-lg-4">
+        <aside class="info-panel">
+          <h2 class="h6 text-uppercase tracking-wide mb-3">Informasaun</h2>
+          <ul class="list-unstyled small mb-0">
+            <li class="mb-2"><strong>Departamentu:</strong> {{ course.department.name }}</li>
+            {% if course.duration %}<li class="mb-2"><strong>Durasaun:</strong> {{ course.duration }}</li>{% endif %}
+            {% if course.qualification %}<li class="mb-2"><strong>Kwalifikasaun:</strong> {{ course.qualification }}</li>{% endif %}
+            <li class="mb-0"><strong>Kódigu:</strong> {{ course.code }}</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

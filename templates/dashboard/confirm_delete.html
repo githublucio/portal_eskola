@@ -1,0 +1,14 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Konfirma{% endblock %}
+
+{% block dashboard_content %}
+<h1 class="h3 mb-3">{{ confirm_title|default:"Konfirma asaun" }}</h1>
+<p class="text-secondary">{{ confirm_message }}</p>
+<p class="fw-semibold">{{ object }}</p>
+<form method="post" class="info-panel" style="max-width:36rem">
+  {% csrf_token %}
+  <button class="btn btn-accent" type="submit">{{ confirm_label|default:"Konfirma" }}</button>
+  <a class="btn btn-outline-secondary" href="{{ cancel_url }}">Kansela</a>
+</form>
+{% endblock %}

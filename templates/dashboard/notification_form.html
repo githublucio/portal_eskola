@@ -1,0 +1,19 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Notifikasaun sira{% endblock %}
+
+{% block dashboard_content %}
+<h1 class="h3 mb-4">Haruka notifikasaun</h1>
+<p class="text-secondary">Mensajen sei mosu iha portal estudante no profesór.</p>
+<form method="post" class="info-panel" style="max-width:36rem" novalidate>
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="mb-3">
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+    </div>
+  {% endfor %}
+  <button class="btn btn-accent" type="submit">Haruka</button>
+</form>
+{% endblock %}

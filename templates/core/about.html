@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Kona-ba eskola | {{ school.short_name|default:school.name }}{% endblock %}
+
+{% block meta_description %}Informasaun kona-ba {{ school.name }}.{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="site-container">
+    <h1 class="display-6 fw-bold mb-2">Kona-ba eskola</h1>
+    <p class="text-secondary mb-0">{{ school.name }}</p>
+  </div>
+</section>
+
+<section class="pb-5 section-page-end">
+  <div class="site-container">
+    <div class="row g-4 align-items-stretch">
+
+      {# Kolom kiri — informasi sekolah #}
+      <div class="col-lg-8 d-flex flex-column">
+        <div class="d-flex flex-column gap-4 h-100">
+
+          {% if school.description %}
+          <article class="info-tile custom-card p-4 p-md-5">
+            <div class="info-tile-icon" aria-hidden="true"><i class="bi bi-info-circle"></i></div>
+            <h2 class="h5 fw-bold mb-3">Introdusaun</h2>
+            <p class="info-tile-text mb-0">{{ school.description }}</p>
+          </article>
+          {% endif %}
+
+          {% if school.history %}
+          <article class="info-tile custom-card p-4 p-md-5">
+            <div class="info-tile-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></div>
+            <h2 class="h5 fw-bold mb-3">Istória</h2>
+            <p class="info-tile-text mb-0">{{ school.history|linebreaksbr }}</p>
+          </article>
+          {% endif %}
+
+          {% if school.vision or school.mission %}
+          <div class="row g-4 flex-grow-1">
+            {% if school.vision %}
+            <div class="col-md-6 d-flex">
+              <article class="info-tile custom-card h-100 p-4 p-md-5 w-100">
+                <div class="info-tile-icon" aria-hidden="true"><i class="bi bi-eye"></i></div>
+                <h2 class="h5 fw-bold mb-3">Vizaun</h2>
+                <p class="info-tile-text mb-0">{{ school.vision|linebreaksbr }}</p>
+              </article>
+            </div>
+            {% endif %}
+            {% if school.mission %}
+            <div class="col-md-6 d-flex">
+              <article class="info-tile custom-card h-100 p-4 p-md-5 w-100">
+                <div class="info-tile-icon" aria-hidden="true"><i class="bi bi-flag"></i></div>
+                <h2 class="h5 fw-bold mb-3">Misaun</h2>
+                <p class="info-tile-text mb-0">{{ school.mission|linebreaksbr }}</p>
+              </article>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      {# Kolom kanan — sidebar kontak (tinggi sama dengan kolom kiri) #}
+      <aside class="col-lg-4 d-flex flex-column">
+        <article class="info-tile custom-card about-contact-card h-100 w-100 p-4 p-md-5 d-flex flex-column">
+          <div>
+            <div class="info-tile-icon" aria-hidden="true"><i class="bi bi-geo-alt"></i></div>
+            <h2 class="h5 fw-bold mb-4">Kontaktu</h2>
+            <ul class="list-unstyled info-tile-text d-flex flex-column gap-3 mb-0">
+              {% if school.address %}
+                <li class="d-flex gap-2"><i class="bi bi-map text-accent mt-1"></i><span>{{ school.address }}</span></li>
+              {% endif %}
+              {% if school.phone %}
+                <li class="d-flex gap-2"><i class="bi bi-telephone text-accent mt-1"></i><span>{{ school.phone }}</span></li>
+              {% endif %}
+              {% if school.email %}
+                <li class="d-flex gap-2"><i class="bi bi-envelope text-accent mt-1"></i><a href="mailto:{{ school.email }}">{{ school.email }}</a></li>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="mt-auto pt-4">
+            <a class="btn btn-accent w-100 py-2 fw-semibold" href="{% url 'contact:contact' %}">Haruka mensajen</a>
+          </div>
+        </article>
+      </aside>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

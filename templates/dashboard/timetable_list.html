@@ -1,0 +1,64 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Oráriu{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+  <h1 class="h3 mb-0">Oráriu</h1>
+  {% if can_add %}
+    <a class="btn btn-accent btn-sm" href="{% url 'academics:dashboard_timetable_create' %}">Slot foun</a>
+  {% endif %}
+</div>
+
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-8">
+    <select class="form-select" name="classroom">
+      <option value="">Turma hotu</option>
+      {% for c in classrooms %}
+        <option value="{{ c.pk }}"{% if selected_classroom == c.pk|stringformat:"s" %} selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-4">
+    <button class="btn btn-outline-secondary w-100" type="submit">Filtra</button>
+  </div>
+</form>
+
+<div class="table-responsive info-panel p-0">
+  <table class="table table-sm align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Dia</th>
+        <th>Hora</th>
+        <th>Turma</th>
+        <th>Disiplina</th>
+        <th>Profesór</th>
+        <th>Sala</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for slot in slots %}
+        <tr>
+          <td>{{ slot.get_weekday_display }}</td>
+          <td>{{ slot.start_time|time:"H:i" }}–{{ slot.end_time|time:"H:i" }}</td>
+          <td>{{ slot.classroom.name }}</td>
+          <td>{{ slot.subject.code }}</td>
+          <td>{{ slot.teacher.full_name|default:"—" }}</td>
+          <td>{{ slot.room|default:"—" }}</td>
+          <td class="text-end">
+            {% if can_add %}
+              <form method="post" action="{% url 'academics:dashboard_timetable_delete' slot.pk %}" class="d-inline" onsubmit="return confirm('Hasai slot ne'e?');">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-secondary" type="submit">Hasai</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="7" class="text-secondary p-3">Laiha slot oráriu.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

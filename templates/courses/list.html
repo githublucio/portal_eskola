@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Kursu sira | {{ school.short_name|default:school.name }}{% endblock %}
+{% block meta_description %}Kursu tékniku no vokasionál sira husi {{ school.name }}.{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="site-container">
+    <h1 class="display-6 fw-bold mb-2">Kursu sira</h1>
+    <p class="text-secondary mb-0">Programa formasaun téknika no vokasionál.</p>
+  </div>
+</section>
+
+<section class="pb-5 section-page-end">
+  <div class="site-container">
+    <div class="row g-4 g-lg-5 align-items-start">
+
+      {# Sidebar filter #}
+      <aside class="col-md-3">
+        <div class="course-filter-card custom-card p-4">
+          <h2 class="h5 fw-bold mb-4 course-filter-title">
+            <i class="bi bi-funnel me-2"></i>Filtru
+          </h2>
+          <form method="get">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary" for="q">Buka</label>
+              <input
+                class="form-control"
+                type="search"
+                name="q"
+                id="q"
+                value="{{ q }}"
+                placeholder="Naran, kódigu, nível…">
+            </div>
+            <div class="mb-4">
+              <label class="form-label small fw-semibold text-secondary" for="department">Departementu</label>
+              <select class="form-select" name="department" id="department">
+                <option value="">Hili hotu…</option>
+                {% for dept in departments %}
+                  <option value="{{ dept.code }}"{% if selected_department == dept.code %} selected{% endif %}>
+                    {{ dept.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <button class="btn btn-accent w-100 py-2 fw-semibold" type="submit">
+              Aplika Filtru
+            </button>
+            {% if q or selected_department %}
+              <a class="btn btn-outline-secondary w-100 mt-2" href="{% url 'courses:list' %}">Limpa</a>
+            {% endif %}
+          </form>
+        </div>
+      </aside>
+
+      {# Course cards grid #}
+      <div class="col-md-9">
+        {% if courses %}
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for course in courses %}
+              <div class="col">
+                <article class="card h-100 custom-card course-card border-0 shadow-sm">
+                  {% if course.image %}
+                    <a href="{{ course.get_absolute_url }}" class="course-card-media">
+                      <img src="{{ course.image.url }}" alt="{{ course.name }}" class="course-card-image">
+                    </a>
+                  {% endif %}
+                  <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                    <span class="badge rounded-pill course-badge">{{ course.department.name }}</span>
+                  </div>
+                  <div class="card-body p-4 d-flex flex-column">
+                    <div class="small text-secondary mb-2">{{ course.code }}{% if course.duration %} · {{ course.duration }}{% endif %}</div>
+                    <h2 class="h5 fw-bold course-card-title mb-3">
+                      <a href="{{ course.get_absolute_url }}">{{ course.name }}</a>
+                    </h2>
+                    {% if course.qualification %}
+                      <p class="card-text text-secondary small mb-0">{{ course.qualification }}</p>
+                    {% elif course.description %}
+                      <p class="card-text text-secondary small mb-0">{{ course.description|truncatewords:18 }}</p>
+                    {% endif %}
+                    <div class="mt-auto pt-3 border-top">
+                      <a href="{{ course.get_absolute_url }}" class="btn btn-sm btn-outline-dark w-100 rounded-pill">
+                        Hare'e Detallu
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if page_obj.has_other_pages %}
+            <nav class="mt-4" aria-label="Pájina sira">
+              <ul class="pagination">
+                {% if page_obj.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&department={{ selected_department }}">Kotuk</a>
+                  </li>
+                {% endif %}
+                <li class="page-item disabled">
+                  <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                {% if page_obj.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&department={{ selected_department }}">Oin</a>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+          {% endif %}
+        {% else %}
+          <div class="empty-state">
+            <strong>Laiha kursu publikadu</strong>
+            {% if q or selected_department %}
+              Filtru ne'e la hetan rezultadu. Koko limpa filtru ka buka ho liafuan seluk.
+            {% else %}
+              Eskola sei publika programa formasaun iha tempu oin.
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

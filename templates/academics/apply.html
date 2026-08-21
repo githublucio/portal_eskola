@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}{{ app_settings.title }} | {{ school.short_name|default:school.name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <h1 class="display-6 mb-2">{{ app_settings.title }}</h1>
+        {% if app_settings.intro %}
+          <p class="text-secondary mb-0">{{ app_settings.intro }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<section class="pb-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-md-12">
+        {% if not applications_open %}
+          <div class="alert alert-secondary border-0 shadow-sm p-4 apply-closed-alert" role="status">
+            <h2 class="h5 fw-bold mb-2">
+              <i class="bi bi-lock-fill me-2" aria-hidden="true"></i>
+              Kandidatura taka
+            </h2>
+            <p class="mb-0 text-secondary">{{ app_settings.closed_message }}</p>
+          </div>
+        {% else %}
+          {% if criteria %}
+          <div class="alert alert-warning border-0 shadow-sm p-4 mb-4 apply-criteria-alert" role="status">
+            <h2 class="h5 fw-bold mb-2 apply-criteria-title">
+              <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+              Kritériu ba Kandidatura Online
+            </h2>
+            <div class="row">
+              <div class="col-lg-8 col-md-10">
+                <ul class="mb-0 small text-secondary d-flex flex-column gap-2 list-unstyled">
+                  {% for item in criteria %}
+                  <li>
+                    <i class="bi bi-check2 me-2 text-success" aria-hidden="true"></i>
+                    {{ item.text }}
+                  </li>
+                  {% endfor %}
+                </ul>
+                <p class="small text-secondary mb-0 mt-3">
+                  Idade permite: <strong>{{ app_settings.min_age }}–{{ app_settings.max_age }} tinan</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="card border-0 shadow-sm p-4 p-md-5 apply-form-card">
+            <form method="post" enctype="multipart/form-data" class="contact-form" novalidate>
+              {% csrf_token %}
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger border-0">{{ form.non_field_errors }}</div>
+              {% endif %}
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.full_name %}
+                </div>
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.email %}
+                </div>
+
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.phone %}
+                </div>
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.date_of_birth %}
+                </div>
+
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.address %}
+                </div>
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.previous_school %}
+                </div>
+
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.desired_course %}
+                </div>
+                <div class="col-md-6">
+                  {% include "academics/partials/apply_field.html" with field=form.desired_course_text %}
+                </div>
+
+                <div class="col-12">
+                  {% include "academics/partials/apply_field.html" with field=form.motivation %}
+                </div>
+
+                <div class="col-12">
+                  {% include "academics/partials/apply_field.html" with field=form.certificate_file %}
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-4">
+                <p class="small text-secondary mb-0">Kampu ho <span class="text-danger">*</span> tenke hakerek.</p>
+                <button class="btn text-white px-5 py-2 fw-semibold btn-send-message" type="submit">
+                  <i class="bi bi-send me-2" aria-hidden="true"></i>Haruka kandidatura
+                </button>
+              </div>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

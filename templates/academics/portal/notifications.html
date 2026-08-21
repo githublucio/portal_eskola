@@ -1,0 +1,17 @@
+{% extends "academics/portal/base.html" %}
+{% block portal_title %}Notifikasaun sira{% endblock %}
+{% block portal_subtitle %}{{ request.user.public_name }}{% endblock %}
+{% block portal_content %}
+<ul class="list-unstyled">
+  {% for n in notifications %}
+    <li class="info-panel mb-3">
+      <div class="fw-semibold">{{ n.title }}</div>
+      <div class="small text-secondary mb-2">{{ n.created_at|date:"d-m-Y H:i" }}</div>
+      <p class="mb-0">{{ n.message }}</p>
+      {% if n.link %}<a class="small" href="{{ n.link }}">Loke</a>{% endif %}
+    </li>
+  {% empty %}
+    <li class="text-secondary">Laiha notifikasaun.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "dashboard/base.html" %}
+{% load account_extras %}
+
+{% block dashboard_title %}{{ section_title }}{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+  <h1 class="h3 mb-0">{{ section_title }}</h1>
+  <div class="d-flex flex-wrap gap-2">
+    {% if back_url %}
+      <a class="btn btn-outline-secondary btn-sm" href="{{ back_url }}">{{ back_label }}</a>
+    {% endif %}
+    {% for action in header_actions %}
+      <a class="btn btn-outline-secondary btn-sm" href="{{ action.url }}">{{ action.label }}</a>
+    {% endfor %}
+    {% if create_url %}
+      <a class="btn btn-accent btn-sm" href="{{ create_url }}">Kria</a>
+    {% endif %}
+    {% if show_admin_link %}
+      <a class="btn btn-outline-secondary btn-sm" href="{{ admin_url }}">Admin Django</a>
+    {% endif %}
+  </div>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-8">
+    <input class="form-control" type="search" name="q" value="{{ q }}" placeholder="Buka…">
+  </div>
+  <div class="col-md-4">
+    <button class="btn btn-outline-secondary w-100" type="submit">Filtra</button>
+  </div>
+</form>
+
+<div class="table-responsive info-panel p-0">
+  <table class="table table-sm align-middle mb-0">
+    <thead>
+      <tr>
+        {% for col in columns %}
+          <th class="text-capitalize">{{ col|cut:"_" }}</th>
+        {% endfor %}
+        {% if has_row_actions %}
+          <th></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr>
+          {% for col in columns %}
+            <td>{{ row|get_field:col }}</td>
+          {% endfor %}
+          {% if has_row_actions %}
+            <td class="text-end text-nowrap">
+              {% if row_extra_url_name %}
+                <a class="btn btn-sm btn-outline-secondary" href="{% url row_extra_url_name row.pk %}">{{ row_extra_label }}</a>
+              {% endif %}
+              {% if can_change and edit_url_name %}
+                <a class="btn btn-sm btn-outline-secondary" href="{% url edit_url_name row.pk %}">{{ edit_label }}</a>
+              {% endif %}
+              {% if delete_url_name and can_remove %}
+                <a class="btn btn-sm btn-outline-secondary" href="{% url delete_url_name row.pk %}">Hamoos</a>
+              {% endif %}
+            </td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="{% if has_row_actions %}{{ columns|length|add:1 }}{% else %}{{ columns|length }}{% endif %}" class="text-secondary p-3">Laiha rejistu.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page_obj.has_other_pages %}
+  <nav class="mt-3" aria-label="Pájina sira">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}">Kotuk</a></li>
+      {% endif %}
+      <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}">Oin</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
+{% endblock %}

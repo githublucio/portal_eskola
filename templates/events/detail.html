@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }} | {{ school.short_name|default:school.name }}{% endblock %}
+{% block meta_description %}{{ event.description|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+<article class="pb-5">
+  <section class="page-hero py-5">
+    <div class="container">
+      <p class="small text-secondary mb-2"><a href="{% url 'events:list' %}">Eventu sira</a></p>
+      <h1 class="display-6 mb-2">{{ event.title }}</h1>
+      <p class="text-secondary mb-0">
+        {{ event.start_at|date:"d-m-Y H:i" }}
+        {% if event.end_at %} — {{ event.end_at|date:"d-m-Y H:i" }}{% endif %}
+      </p>
+    </div>
+  </section>
+  <div class="container">
+    {% if event.image %}
+      <img src="{{ event.image.url }}" alt="{{ event.title }}" class="content-hero-image mb-4">
+    {% endif %}
+    <div class="info-panel mb-4">
+      <ul class="list-unstyled small mb-0">
+        {% if event.location %}<li class="mb-2"><strong>Fatin:</strong> {{ event.location }}</li>{% endif %}
+        {% if event.organizer %}<li class="mb-2"><strong>Organizadór:</strong> {{ event.organizer }}</li>{% endif %}
+      </ul>
+    </div>
+    <div class="content-body">{{ event.description|linebreaks }}</div>
+  </div>
+</article>
+{% endblock %}

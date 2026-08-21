@@ -1,0 +1,51 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Relatóriu sira{% endblock %}
+
+{% block dashboard_content %}
+<h1 class="h3 mb-4">Relatóriu sira</h1>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card"><div class="stat-value">{{ summary.students_active }}</div><div class="stat-label">Estudante ativu sira</div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card"><div class="stat-value">{{ summary.teachers_active }}</div><div class="stat-label">Profesór ativu sira</div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card"><div class="stat-value">{{ summary.courses_published }}</div><div class="stat-label">Kursu publikadu sira</div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card"><div class="stat-value">{{ summary.enrollments_active }}</div><div class="stat-label">Matríkula ativu sira</div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card"><div class="stat-value">{{ summary.applications_new }}</div><div class="stat-label">Kandidatura foun sira</div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card"><div class="stat-value">{{ summary.attendance_present_pct }}%</div><div class="stat-label">Prezensia (asisténsia)</div></div>
+  </div>
+</div>
+
+<div class="info-panel mb-4">
+  <h2 class="h5 mb-3">Simu CSV</h2>
+  {% if exports %}
+    <ul class="list-unstyled mb-0">
+      {% for item in exports %}
+        <li class="d-flex justify-content-between align-items-center border-bottom py-2">
+          <span>{{ item.label }} <span class="text-secondary small">({{ item.count }})</span></span>
+          <a class="btn btn-sm btn-accent" href="{% url item.url_name %}">Simu</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-secondary mb-0">Laiha permissaun atu simu relatóriu.</p>
+  {% endif %}
+</div>
+
+<p class="small text-secondary mb-0">
+  Atividade audit (loron 7): <strong>{{ summary.audit_last_7_days }}</strong>
+  {% if perms.accounts.view_auditlog or request.user.is_superuser %}
+    · <a href="{% url 'accounts:dashboard_audit' %}">Haree rejistu audit</a>
+  {% endif %}
+</p>
+{% endblock %}

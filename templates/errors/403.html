@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Asesu la permite | {{ school.short_name|default:school.name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container text-center py-4">
+    <p class="text-secondary mb-2">403</p>
+    <h1 class="display-6 mb-3">Asesu la permite</h1>
+    <p class="text-secondary mb-4">Ita-boot la iha permissaun ba pájina ne'e.</p>
+    <a class="btn btn-accent" href="{% url 'core:home' %}">Fila ba inísiu</a>
+  </div>
+</section>
+{% endblock %}

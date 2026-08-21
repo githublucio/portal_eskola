@@ -1,0 +1,45 @@
+{% extends "academics/portal/base.html" %}
+{% block portal_title %}Portal profesór{% endblock %}
+{% block portal_subtitle %}{{ teacher.full_name }} · {{ teacher.employee_number }}{% endblock %}
+{% block portal_nav %}
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:teacher_timetable' %}">Oráriu</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:teacher_classes' %}">Turma sira</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:teacher_attendance_mark' %}">Rejista asisténsia</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:teacher_grades_entry' %}">Lansa nota</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:notifications' %}">Notifikasaun sira</a>
+{% endblock %}
+{% block portal_content %}
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="info-panel h-100">
+      <h2 class="h6 text-uppercase mb-3">Aula ohin</h2>
+      {% if today_slots %}
+        <ul class="list-unstyled mb-0">
+          {% for s in today_slots %}
+            <li class="mb-2">
+              <strong>{{ s.start_time|time:"H:i" }}–{{ s.end_time|time:"H:i" }}</strong>
+              · {{ s.subject.code }} · {{ s.classroom.name }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-secondary mb-0">Laiha aula agendada ba ohin.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="info-panel h-100">
+      <h2 class="h6 text-uppercase mb-3">Turma sira (diretór)</h2>
+      {% if advised_classes %}
+        <ul class="list-unstyled mb-0">
+          {% for c in advised_classes %}
+            <li class="mb-2"><a href="{% url 'academics:teacher_class_students' c.pk %}">{{ c.name }}</a> · {{ c.course.code }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-secondary mb-0">Laiha turma hanesan diretór turma.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

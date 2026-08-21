@@ -1,0 +1,26 @@
+{% extends "academics/portal/base.html" %}
+{% block portal_title %}Sertifikadu sira{% endblock %}
+{% block portal_subtitle %}{{ student.full_name }}{% endblock %}
+{% block portal_nav %}
+  <a class="btn btn-sm btn-accent" href="{% url 'academics:student_portal' %}">Portal</a>
+{% endblock %}
+{% block portal_content %}
+<div class="table-responsive info-panel p-0">
+  <table class="table table-sm mb-0 align-middle">
+    <thead><tr><th>Númeru</th><th>Títulu</th><th>Emite</th><th>Tinan</th><th></th></tr></thead>
+    <tbody>
+      {% for c in certificates %}
+        <tr>
+          <td>{{ c.certificate_number }}</td>
+          <td>{{ c.title }}</td>
+          <td>{{ c.issued_at|date:"d-m-Y"|default:"—" }}</td>
+          <td>{{ c.academic_year|default:"—" }}</td>
+          <td><a href="{% url 'academics:certificate_print' c.pk %}">Imprime</a></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="p-3 text-secondary">Laiha sertifikadu emite.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

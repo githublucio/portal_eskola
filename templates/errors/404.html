@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Pájina la hetan | {{ school.short_name|default:school.name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container text-center py-4">
+    <p class="text-secondary mb-2">404</p>
+    <h1 class="display-6 mb-3">Pájina la hetan</h1>
+    <p class="text-secondary mb-4">Ligasaun ne'e la eziste ka konteúdu ona arkivu.</p>
+    <a class="btn btn-accent" href="{% url 'core:home' %}">Fila ba inísiu</a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Perfil{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">Ha'u-nia perfil</h1>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'accounts:password_change' %}">Troka liafuan-sekrétu</a>
+</div>
+<form method="post" class="info-panel">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="mb-3">
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+    </div>
+  {% endfor %}
+  <button class="btn btn-accent" type="submit">Rai</button>
+</form>
+{% endblock %}

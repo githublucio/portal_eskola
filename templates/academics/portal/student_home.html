@@ -1,0 +1,51 @@
+{% extends "academics/portal/base.html" %}
+
+{% block portal_title %}Portal estudante{% endblock %}
+{% block portal_subtitle %}{{ student.full_name }} · {{ student.student_number }}{% endblock %}
+
+{% block portal_nav %}
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:student_grades' %}">Nota sira</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:student_attendance' %}">Asisténsia</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:student_timetable' %}">Oráriu</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:student_certificates' %}">Sertifikadu sira</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:notifications' %}">Notifikasaun sira</a>
+{% endblock %}
+
+{% block portal_content %}
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="info-panel h-100">
+      <h2 class="h6 text-uppercase mb-3">Turma agora</h2>
+      {% if current_class %}
+        <p class="mb-1 fw-semibold">{{ current_class.classroom.name }}</p>
+        <p class="small text-secondary mb-0">{{ current_class.classroom.course }} · {{ current_class.academic_year }}</p>
+      {% else %}
+        <div class="empty-state py-3 px-2">
+          <strong>Seidauk iha turma ativu</strong>
+          Eskola sei fó turma iha administrasaun.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="info-panel h-100">
+      <h2 class="h6 text-uppercase mb-3">Nota foin daudauk sira</h2>
+      {% if recent_grades %}
+        <ul class="list-unstyled mb-0">
+          {% for g in recent_grades %}
+            <li class="mb-2 d-flex justify-content-between">
+              <span>{{ g.subject.code }} · T{{ g.term }}</span>
+              <strong>{{ g.score }}/{{ g.max_score }}</strong>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="empty-state py-3 px-2">
+          <strong>Laiha nota</strong>
+          Profesór lansa nota iha portal profesór.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Emite sertifikadu{% endblock %}
+
+{% block dashboard_content %}
+<h1 class="h3 mb-4">Emite sertifikadu</h1>
+<form method="post" class="info-panel" style="max-width:36rem" novalidate>
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="mb-3">
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+      {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+    </div>
+  {% endfor %}
+  <button class="btn btn-accent" type="submit">Rai</button>
+  <a class="btn btn-outline-secondary" href="{% url 'academics:dashboard_certificates' %}">Kansela</a>
+</form>
+{% endblock %}

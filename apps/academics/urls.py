@@ -1,0 +1,110 @@
+from django.urls import path
+
+from . import staff_views, views
+
+app_name = "academics"
+
+urlpatterns = [
+    path("apply/", views.ApplyCreateView.as_view(), name="apply"),
+    path("apply/thanks/", views.ApplyThanksView.as_view(), name="apply_thanks"),
+    path(
+        "portal/student/",
+        views.StudentPortalHomeView.as_view(),
+        name="student_portal",
+    ),
+    path(
+        "portal/student/grades/",
+        views.StudentGradesView.as_view(),
+        name="student_grades",
+    ),
+    path(
+        "portal/student/attendance/",
+        views.StudentAttendanceView.as_view(),
+        name="student_attendance",
+    ),
+    path(
+        "portal/student/timetable/",
+        views.StudentTimetableView.as_view(),
+        name="student_timetable",
+    ),
+    path(
+        "portal/student/certificates/",
+        views.StudentCertificatesView.as_view(),
+        name="student_certificates",
+    ),
+    path(
+        "portal/notifications/",
+        views.NotificationListView.as_view(),
+        name="notifications",
+    ),
+    path(
+        "portal/teacher/",
+        views.TeacherPortalHomeView.as_view(),
+        name="teacher_portal",
+    ),
+    path(
+        "portal/teacher/timetable/",
+        views.TeacherTimetableView.as_view(),
+        name="teacher_timetable",
+    ),
+    path(
+        "portal/teacher/classes/",
+        views.TeacherClassListView.as_view(),
+        name="teacher_classes",
+    ),
+    path(
+        "portal/teacher/classes/<int:classroom_id>/",
+        views.TeacherClassStudentsView.as_view(),
+        name="teacher_class_students",
+    ),
+    path(
+        "portal/teacher/attendance/",
+        views.TeacherAttendanceSummaryView.as_view(),
+        name="teacher_attendance",
+    ),
+    path(
+        "portal/teacher/attendance/mark/",
+        views.TeacherAttendanceMarkView.as_view(),
+        name="teacher_attendance_mark",
+    ),
+    path(
+        "portal/teacher/grades/",
+        views.TeacherGradeEntryView.as_view(),
+        name="teacher_grades_entry",
+    ),
+    path(
+        "certificates/<int:pk>/print/",
+        staff_views.CertificatePrintView.as_view(),
+        name="certificate_print",
+    ),
+    path(
+        "dashboard/timetable/",
+        staff_views.DashboardTimetableListView.as_view(),
+        name="dashboard_timetable",
+    ),
+    path(
+        "dashboard/timetable/new/",
+        staff_views.DashboardTimetableCreateView.as_view(),
+        name="dashboard_timetable_create",
+    ),
+    path(
+        "dashboard/timetable/<int:pk>/delete/",
+        staff_views.DashboardTimetableDeleteView.as_view(),
+        name="dashboard_timetable_delete",
+    ),
+    path(
+        "dashboard/certificates/",
+        staff_views.DashboardCertificateListView.as_view(),
+        name="dashboard_certificates",
+    ),
+    path(
+        "dashboard/certificates/new/",
+        staff_views.DashboardCertificateCreateView.as_view(),
+        name="dashboard_certificate_create",
+    ),
+    path(
+        "dashboard/notifications/",
+        staff_views.DashboardNotificationComposeView.as_view(),
+        name="dashboard_notifications",
+    ),
+]

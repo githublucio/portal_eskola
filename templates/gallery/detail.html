@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ album.title }} | {{ school.short_name|default:school.name }}{% endblock %}
+{% block meta_description %}{{ album.description|default:album.title|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container">
+    <p class="small text-secondary mb-2"><a href="{% url 'gallery:list' %}">Imajen sira</a></p>
+    <h1 class="display-6 mb-2">{{ album.title }}</h1>
+    {% if album.description %}<p class="text-secondary mb-0">{{ album.description }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="pb-5">
+  <div class="container">
+    {% if album.photos.all %}
+      <div class="row g-3">
+        {% for photo in album.photos.all %}
+          <div class="col-6 col-md-4 col-lg-3">
+            <figure class="gallery-photo mb-0">
+              <img src="{{ photo.image.url }}" alt="{{ photo.caption|default:album.title }}" class="gallery-photo-image">
+              {% if photo.caption %}<figcaption class="small text-secondary mt-1">{{ photo.caption }}</figcaption>{% endif %}
+            </figure>
+          </div>
+        {% endfor %}
+      </div>
+    {% elif album.cover_image %}
+      <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-3">
+          <figure class="gallery-photo mb-0">
+            <img src="{{ album.cover_image.url }}" alt="{{ album.title }}" class="gallery-photo-image">
+            <figcaption class="small text-secondary mt-1">{{ album.title }}</figcaption>
+          </figure>
+        </div>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p class="mb-0">Álbum ne'e seidauk iha foto.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

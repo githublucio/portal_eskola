@@ -1,0 +1,5 @@
+{% load static %}
+<img
+  src="{% if school.logo %}{{ school.logo.url }}{% else %}{% static 'img/logo-eskola.png' %}{% endif %}"
+  alt="{{ school.short_name|default:school.name }}"
+  class="{{ logo_class|default:'site-logo' }}">

@@ -1,0 +1,80 @@
+<footer class="site-footer mt-auto pt-5">
+  <div class="site-container pt-4 pb-4">
+    <div class="row g-4 mb-4 align-items-start">
+
+      {# Kolom 1: Profil & Kontak #}
+      <div class="col-lg-5 col-md-6">
+        <h2 class="h5 fw-bold mb-3 text-white">{{ school.name }}</h2>
+        {% if school.description %}
+          <p class="footer-desc small mb-4">{{ school.description|truncatewords:28 }}</p>
+        {% endif %}
+        <ul class="list-unstyled small footer-contact d-flex flex-column gap-2 mb-0">
+          {% if school.address %}
+            <li><i class="bi bi-geo-alt-fill me-2"></i>{{ school.address }}</li>
+          {% endif %}
+          {% if school.phone %}
+            <li><i class="bi bi-telephone-fill me-2"></i><a href="tel:{{ school.phone }}">{{ school.phone }}</a></li>
+          {% endif %}
+          {% if school.email %}
+            <li><i class="bi bi-envelope-fill me-2"></i><a href="mailto:{{ school.email }}">{{ school.email }}</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      {# Kolom 2: Ligasaun #}
+      <div class="col-lg-3 col-md-6">
+        <h3 class="h6 fw-bold text-uppercase tracking-wide mb-3 text-white">Ligasaun</h3>
+        <ul class="list-unstyled footer-links d-flex flex-column gap-2 small mb-0">
+          <li><a href="{% url 'core:home' %}">Inísiu</a></li>
+          <li><a href="{% url 'core:about' %}">Kona-ba Ami</a></li>
+          <li><a href="{% url 'courses:list' %}">Kursu sira</a></li>
+          <li><a href="{% url 'news:list' %}">Notísia sira</a></li>
+          <li><a href="{% url 'events:list' %}">Eventu sira</a></li>
+          <li><a href="{% url 'documents:list' %}">Dokumentu sira</a></li>
+          <li><a href="{% url 'gallery:list' %}">Imajen sira</a></li>
+          <li><a href="{% url 'contact:contact' %}">Kontaktu</a></li>
+          <li><a href="{% url 'academics:apply' %}">Kandidatura</a></li>
+        </ul>
+      </div>
+
+      {# Kolom 3: Mapa #}
+      <div class="col-lg-4 col-md-12">
+        <h3 class="h6 fw-bold text-uppercase tracking-wide mb-3 text-white">Mapa</h3>
+        <div class="footer-map">
+          <iframe
+            title="Mapa {{ school.short_name|default:school.name }}"
+            src="{{ school.map_embed_src }}"
+            width="100%"
+            height="200"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+        {% if school.social_links %}
+          <div class="social-row mt-3">
+            {% for label, url, icon in school.social_links %}
+              <a class="social-btn social-btn-light" href="{{ url }}" target="_blank" rel="noopener" aria-label="{{ label }}">
+                <i class="bi {{ icon }}"></i>
+                <span>{{ label }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="site-container py-3">
+      <div class="row small align-items-center gy-2">
+        <div class="col-md-7 text-center text-md-start">
+          <span>&copy; {% now "Y" %} {{ school.name }}. Direitu hotu rezervadu.</span>
+        </div>
+        <div class="col-md-5 text-center text-md-end">
+          <span>Portal ofisiál ESTVP Atauro</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

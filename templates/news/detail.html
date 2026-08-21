@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ news.title }} | {{ school.short_name|default:school.name }}{% endblock %}
+
+{% block meta_description %}{{ news.summary|default:news.content|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+<article class="pb-5">
+  <section class="page-hero py-5">
+    <div class="container">
+      <p class="small text-secondary mb-2">
+        <a href="{% url 'news:list' %}">Notísia sira</a>
+        · {{ news.category.name }}
+        {% if news.published_at %} · {{ news.published_at|date:"d-m-Y" }}{% endif %}
+        {% if news.is_announcement %} · <span class="badge text-bg-warning">Anúnsiu</span>{% endif %}
+      </p>
+      <h1 class="display-6 mb-0">{{ news.title }}</h1>
+    </div>
+  </section>
+  <div class="container">
+    {% if news.featured_image %}
+      <img src="{{ news.featured_image.url }}" alt="{{ news.title }}" class="content-hero-image mb-4">
+    {% endif %}
+    {% if news.summary %}
+      <p class="lead text-secondary">{{ news.summary }}</p>
+    {% endif %}
+    <div class="content-body">
+      {{ news.content|linebreaks }}
+    </div>
+    <p class="mt-4 mb-0">
+      <a href="{% url 'news:list' %}" class="link-accent">Fila ba notísia sira</a>
+    </p>
+  </div>
+</article>
+{% endblock %}

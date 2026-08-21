@@ -1,0 +1,75 @@
+{% load static %}
+<header class="site-header border-bottom bg-white sticky-top">
+  <nav class="navbar navbar-expand-lg site-container py-2">
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="{% url 'core:home' %}">
+      {% include "partials/school_logo.html" with logo_class="site-logo" %}
+      <span>{{ school.short_name|default:school.name }}</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Loke navigasaun">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.url_name == 'home' %} active{% endif %}" href="{% url 'core:home' %}">Inísiu</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.url_name == 'about' %} active{% endif %}" href="{% url 'core:about' %}">Konaba</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.app_name == 'courses' %} active{% endif %}" href="{% url 'courses:list' %}">Kursu sira</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.app_name == 'news' %} active{% endif %}" href="{% url 'news:list' %}">Notísia sira</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.app_name == 'events' %} active{% endif %}" href="{% url 'events:list' %}">Eventu sira</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle{% if request.resolver_match.app_name == 'documents' or request.resolver_match.app_name == 'gallery' %} active{% endif %}" href="#" id="mediaMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">Média</a>
+          <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm mt-2" aria-labelledby="mediaMenu">
+            <li>
+              <a class="dropdown-item{% if request.resolver_match.app_name == 'documents' %} active{% endif %}" href="{% url 'documents:list' %}">Dokumentu sira</a>
+            </li>
+            <li>
+              <a class="dropdown-item{% if request.resolver_match.app_name == 'gallery' %} active{% endif %}" href="{% url 'gallery:list' %}">Imajen sira</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.url_name == 'contact' %} active{% endif %}" href="{% url 'contact:contact' %}">Kontaktu</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.url_name == 'apply' %} active{% endif %}" href="{% url 'academics:apply' %}">Kandidatura</a>
+        </li>
+        {% if user.is_authenticated %}
+          {% if has_student_portal %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'academics:student_portal' %}">Portal estudante</a>
+          </li>
+          {% endif %}
+          {% if has_teacher_portal %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'academics:teacher_portal' %}">Portal profesór</a>
+          </li>
+          {% endif %}
+          {% if user.can_access_dashboard %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:dashboard' %}">Painél</a>
+          </li>
+          {% endif %}
+          <li class="nav-item ms-lg-2">
+            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-outline-secondary" type="submit">Sai</button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-sm btn-accent" href="{% url 'accounts:login' %}">Tama</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+</header>

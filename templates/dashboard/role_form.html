@@ -1,0 +1,137 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}{{ role_label }}{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">{{ role_label }}</h1>
+    <p class="text-secondary mb-0">{{ role_description }}</p>
+  </div>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'accounts:dashboard_roles' %}">Fila ba papél sira</a>
+</div>
+
+<section class="info-panel mb-4">
+  <h2 class="h5 mb-3">Izin CRUD</h2>
+  {% if locked %}
+    <p class="text-secondary">Papél Super Admin iha asesu kompletu. Izin la bele limita.</p>
+  {% elif not can_edit_permissions %}
+    <p class="text-secondary">Ita bele haree izin. Super admin de'it bele hadia matriz ne'e.</p>
+  {% endif %}
+  <div class="rbac-legend mb-3">
+    <span class="rbac-check is-on is-static"><span class="rbac-check-box" aria-hidden="true"></span><span class="rbac-check-text">Sim</span></span>
+    <span class="small">iha izin</span>
+    <span class="rbac-check is-static"><span class="rbac-check-box" aria-hidden="true"></span><span class="rbac-check-text">Lae</span></span>
+    <span class="small">laiha izin</span>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="table-responsive">
+      <table class="table align-middle rbac-matrix mb-0">
+        <thead>
+          <tr>
+            <th>Módulu</th>
+            <th class="text-center">Haree</th>
+            <th class="text-center">Kria</th>
+            <th class="text-center">Hadia</th>
+            <th class="text-center">Hamoos</th>
+            <th class="text-center">Publika</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in matrix_rows %}
+            <tr>
+              <td class="rbac-module">{{ row.label }}</td>
+              {% for cell in row.cells %}
+                <td class="text-center rbac-cell{% if cell.checked %} is-on{% endif %}">
+                  {% if cell.enabled %}
+                    <label class="rbac-check">
+                      <input type="checkbox" name="access" value="{{ cell.value }}"{% if cell.checked %} checked{% endif %}>
+                      <span class="rbac-check-box" aria-hidden="true"></span>
+                      <span class="rbac-check-text"></span>
+                    </label>
+                  {% elif cell.value %}
+                    <span class="rbac-check{% if cell.checked %} is-on{% endif %} is-static">
+                      <span class="rbac-check-box" aria-hidden="true"></span>
+                      <span class="rbac-check-text"></span>
+                    </span>
+                    {% if cell.checked %}
+                      <input type="hidden" name="access" value="{{ cell.value }}">
+                    {% endif %}
+                  {% else %}
+                    <span class="rbac-na">—</span>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if can_edit_permissions %}
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <button class="btn btn-accent" type="submit" name="action" value="save_permissions">Rai izin</button>
+        <button class="btn btn-outline-secondary" type="submit" name="action" value="reset_defaults">Fila ba padrão</button>
+      </div>
+    {% endif %}
+  </form>
+</section>
+
+<section class="info-panel">
+  <h2 class="h5 mb-3">Uza-na'in iha papél ne'e</h2>
+  {% if can_manage_members %}
+    <form method="post" class="row g-2 mb-3">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add_member">
+      <div class="col-md-8">
+        <select class="form-select" name="user_id" required>
+          <option value="">Hili uza-na'in…</option>
+          {% for user in candidate_users %}
+            <option value="{{ user.pk }}">{{ user.username }}{% if user.public_name and user.public_name != user.username %} — {{ user.public_name }}{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-accent w-100" type="submit">Aumenta ba papél</button>
+      </div>
+    </form>
+  {% endif %}
+
+  <div class="table-responsive">
+    <table class="table table-sm align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Uza-na'in</th>
+          <th>Naran</th>
+          <th>Korreiu</th>
+          {% if can_manage_members %}<th></th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for member in members %}
+          <tr>
+            <td>{{ member.username }}</td>
+            <td>{{ member.public_name }}</td>
+            <td>{{ member.email|default:"—" }}</td>
+            {% if can_manage_members %}
+              <td class="text-end">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="remove_member">
+                  <input type="hidden" name="user_id" value="{{ member.pk }}">
+                  <button class="btn btn-sm btn-outline-secondary" type="submit">Hasai</button>
+                </form>
+              </td>
+            {% endif %}
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="{% if can_manage_members %}4{% else %}3{% endif %}" class="text-secondary p-3">Sei laiha uza-na'in iha papél ne'e.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

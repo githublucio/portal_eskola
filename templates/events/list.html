@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Eventu sira | {{ school.short_name|default:school.name }}{% endblock %}
+{% block meta_description %}Eventu no atividade sira husi {{ school.name }}.{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="site-container">
+    <h1 class="display-6 fw-bold mb-2">Eventu sira</h1>
+    <p class="text-secondary mb-0">Atividade no ajenda eskola.</p>
+  </div>
+</section>
+
+<section class="pb-5 section-page-end">
+  <div class="site-container">
+
+    <div class="mb-5">
+      <div class="d-flex flex-wrap gap-2">
+        <a
+          href="?scope=upcoming"
+          class="btn px-4 py-2 fw-semibold event-tab{% if scope == 'upcoming' %} event-tab-active{% else %} event-tab-idle{% endif %}">
+          Oin mai
+        </a>
+        <a
+          href="?scope=past"
+          class="btn px-4 py-2 fw-semibold event-tab{% if scope == 'past' %} event-tab-active{% else %} event-tab-idle{% endif %}">
+          Liu tiha
+        </a>
+      </div>
+    </div>
+
+    {% if events %}
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for event in events %}
+          <div class="col">
+            <article class="card h-100 custom-card shadow-sm border-0">
+              <div class="event-image-wrapper{% if not event.image %} bg-teal-light d-flex align-items-center justify-content-center{% endif %}">
+                {% if event.image %}
+                  <a href="{{ event.get_absolute_url }}" class="d-block w-100 h-100">
+                    <img
+                      src="{{ event.image.url }}"
+                      class="w-100 h-100 object-cover"
+                      alt="{{ event.title }}">
+                  </a>
+                {% else %}
+                  <a href="{{ event.get_absolute_url }}" class="text-decoration-none d-flex align-items-center justify-content-center w-100 h-100" aria-label="{{ event.title }}">
+                    <i class="bi bi-calendar2-event display-5 text-teal" aria-hidden="true"></i>
+                  </a>
+                {% endif %}
+              </div>
+
+              <div class="card-body p-4 d-flex flex-column justify-content-between">
+                <div>
+                  <span class="badge event-date-badge mb-2 fw-semibold px-2 py-1 small">
+                    <i class="bi bi-calendar-event me-1"></i>{{ event.start_at|date:"D, d M Y" }}
+                  </span>
+                  <h2 class="h5 card-title fw-bold my-2">
+                    <a href="{{ event.get_absolute_url }}" class="text-decoration-none text-dark hover-teal">
+                      {{ event.title }}
+                    </a>
+                  </h2>
+                  {% if event.location %}
+                    <p class="card-text text-secondary small mb-1">
+                      <i class="bi bi-geo-alt me-1"></i>{{ event.location }}
+                    </p>
+                  {% endif %}
+                  {% if event.description %}
+                    <p class="card-text text-secondary small mb-0">{{ event.description|truncatewords:18 }}</p>
+                  {% endif %}
+                </div>
+                <div class="mt-4 pt-3 border-top text-end">
+                  <a href="{{ event.get_absolute_url }}" class="text-decoration-none small fw-bold news-read-more">
+                    Partisipa <i class="bi bi-chevron-right ms-1"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_other_pages %}
+        <nav class="mt-4" aria-label="Pájina sira">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?scope={{ scope }}&page={{ page_obj.previous_page_number }}">Kotuk</a>
+              </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <span class="page-link">Pájina {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?scope={{ scope }}&page={{ page_obj.next_page_number }}">Oin</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    {% else %}
+      <div class="empty-state">
+        <strong>Seidauk iha eventu {% if scope == 'past' %}liu tiha{% else %}oin mai{% endif %}</strong>
+        Eventu publikadu sei mosu iha ne'e.
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Tama | {{ school.short_name|default:school.name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+        <div class="info-panel">
+          <h1 class="h4 mb-3">Tama ba portal</h1>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.username.id_for_label }}">Naran uza-na'in</label>
+              {{ form.username }}
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.password.id_for_label }}">Liafuan-sekrétu</label>
+              {{ form.password }}
+            </div>
+            <button class="btn btn-accent w-100" type="submit">Tama</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Dokumentu sira | {{ school.short_name|default:school.name }}{% endblock %}
+{% block meta_description %}Dokumentu públiku sira husi {{ school.name }}.{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="site-container">
+    <h1 class="display-6 fw-bold mb-2">Dokumentu sira</h1>
+    <p class="text-secondary mb-0">Arkivu no publikasaun eskola.</p>
+  </div>
+</section>
+
+<section class="pb-5 section-page-end">
+  <div class="site-container">
+
+    <div class="card border-0 shadow-sm p-4 mb-4 news-filter-card">
+      <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-5">
+          <label class="form-label small fw-semibold text-secondary" for="q">Buka Dokumentu</label>
+          <input
+            type="search"
+            class="form-control"
+            name="q"
+            id="q"
+            value="{{ search_query }}"
+            placeholder="Buka naran dokumentu...">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small fw-semibold text-secondary" for="category">Kategoria</label>
+          <select class="form-select" name="category" id="category">
+            <option value="">Hili hotu…</option>
+            {% for category in categories %}
+              <option value="{{ category.slug }}"{% if active_category == category.slug %} selected{% endif %}>
+                {{ category.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-accent text-white w-100 py-2 fw-semibold">
+            <i class="bi bi-funnel me-2"></i>Filtru
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {% if documents %}
+      <div class="d-flex flex-column gap-3">
+        {% for doc in documents %}
+          <div class="card border-0 shadow-sm custom-document-row">
+            <div class="card-body p-3 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="doc-icon-box bg-teal-light text-teal" aria-hidden="true">
+                  <i class="bi {{ doc.file_icon_class }} fs-3"></i>
+                </div>
+                <div>
+                  <h2 class="h6 fw-bold mb-1 text-dark">{{ doc.title }}</h2>
+                  <p class="text-secondary small mb-0">
+                    Dokumentu:
+                    <span class="fw-semibold">{{ doc.file_name|default:"—" }}</span>
+                    {% if doc.published_at %}
+                      · Data: <span class="text-muted">{{ doc.published_at|date:"d-m-Y" }}</span>
+                    {% endif %}
+                    {% if doc.version %}
+                      · v{{ doc.version }}
+                    {% endif %}
+                  </p>
+                  <span class="badge bg-light text-secondary mt-1 border">{{ doc.category.name }}</span>
+                  {% if doc.description %}
+                    <p class="small text-secondary mb-0 mt-1">{{ doc.description|truncatewords:18 }}</p>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="ms-sm-auto">
+                <a
+                  href="{{ doc.get_absolute_url }}"
+                  class="btn btn-teal-action rounded-circle d-inline-flex align-items-center justify-content-center"
+                  title="Download: {{ doc.file_name|default:doc.title }}"
+                  aria-label="Download {{ doc.title }}">
+                  <i class="bi bi-download"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_other_pages %}
+        <nav class="mt-4" aria-label="Pájina sira">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&category={{ active_category }}">Kotuk</a>
+              </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <span class="page-link">Pájina {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&category={{ active_category }}">Oin</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    {% else %}
+      <div class="empty-state">
+        <strong>Seidauk iha dokumentu públiku</strong>
+        {% if search_query or active_category %}
+          Filtru ne'e la hetan rezultadu. Koko limpa ka buka ho liafuan seluk.
+        {% else %}
+          Eskola sei publika arkivu sira iha tempu oin.
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

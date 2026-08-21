@@ -1,0 +1,5 @@
+{% if image %}
+<a href="{{ href }}" class="card-media{% if featured %} is-featured{% endif %}">
+  <img src="{{ image.url }}" alt="{{ alt }}" class="news-card-image">
+</a>
+{% endif %}

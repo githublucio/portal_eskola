@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Kandidatura haruka ona | {{ school.short_name|default:school.name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container text-center py-4">
+    <h1 class="display-6 mb-3">Obrigadu</h1>
+    <p class="text-secondary mb-4">Kandidatura ita-nia simu ona. Eskola sei kontakta liuhusi korreiu ka telefone.</p>
+    <a class="btn btn-accent" href="{% url 'core:home' %}">Fila ba inísiu</a>
+  </div>
+</section>
+{% endblock %}

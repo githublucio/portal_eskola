@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero py-4">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>
+        <h1 class="h3 mb-1">{% block portal_title %}Portal{% endblock %}</h1>
+        <p class="text-secondary small mb-0">{% block portal_subtitle %}{% endblock %}</p>
+      </div>
+      <nav class="d-flex flex-wrap gap-2">
+        {% block portal_nav %}{% endblock %}
+      </nav>
+    </div>
+  </div>
+</section>
+<section class="pb-5">
+  <div class="container">
+    {% block portal_content %}{% endblock %}
+  </div>
+</section>
+{% endblock %}

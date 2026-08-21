@@ -1,0 +1,66 @@
+{% extends "academics/portal/base.html" %}
+{% block portal_title %}Lansa nota{% endblock %}
+{% block portal_subtitle %}{{ teacher.full_name }}{% endblock %}
+{% block portal_nav %}
+  <a class="btn btn-sm btn-accent" href="{% url 'academics:teacher_portal' %}">Portal</a>
+{% endblock %}
+{% block portal_content %}
+<form method="get" class="info-panel mb-4">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label" for="{{ form.classroom.id_for_label }}">{{ form.classroom.label }}</label>
+      {{ form.classroom }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="{{ form.subject.id_for_label }}">{{ form.subject.label }}</label>
+      {{ form.subject }}
+    </div>
+    <div class="col-md-2">
+      <label class="form-label" for="{{ form.term.id_for_label }}">{{ form.term.label }}</label>
+      {{ form.term }}
+    </div>
+    <div class="col-md-2">
+      <label class="form-label" for="{{ form.max_score.id_for_label }}">{{ form.max_score.label }}</label>
+      {{ form.max_score }}
+    </div>
+    <div class="col-md-8">
+      <label class="form-label" for="{{ form.assessment_name.id_for_label }}">{{ form.assessment_name.label }}</label>
+      {{ form.assessment_name }}
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <button class="btn btn-outline-secondary w-100" type="submit">Loke turma</button>
+    </div>
+  </div>
+</form>
+
+{% if roster %}
+<form method="post">
+  {% csrf_token %}
+  <input type="hidden" name="classroom" value="{{ form.classroom.value }}">
+  <input type="hidden" name="subject" value="{{ form.subject.value }}">
+  <input type="hidden" name="term" value="{{ form.term.value }}">
+  <input type="hidden" name="assessment_name" value="{{ form.assessment_name.value }}">
+  <input type="hidden" name="max_score" value="{{ form.max_score.value }}">
+  <div class="table-responsive info-panel p-0">
+    <table class="table table-sm mb-0 align-middle">
+      <thead>
+        <tr><th>Nº</th><th>Naran</th><th style="width:8rem">Nota</th></tr>
+      </thead>
+      <tbody>
+        {% for row in roster %}
+          <tr>
+            <td>{{ row.student.student_number }}</td>
+            <td>{{ row.student.full_name }}</td>
+            <td>
+              <input class="form-control form-control-sm" type="number" step="0.01" min="0"
+                     name="score_{{ row.student.pk }}" value="{{ row.score }}">
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <button class="btn btn-accent mt-3" type="submit">Rai nota sira</button>
+</form>
+{% endif %}
+{% endblock %}

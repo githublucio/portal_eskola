@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Imajen sira | {{ school.short_name|default:school.name }}{% endblock %}
+{% block meta_description %}Imajen sira husi {{ school.name }}.{% endblock %}
+
+{% block content %}
+<section class="page-hero py-5">
+  <div class="container">
+    <h1 class="display-6 mb-2">Imajen sira</h1>
+    <p class="text-secondary mb-0">Álbum no imajen eskola.</p>
+  </div>
+</section>
+
+<section class="pb-5">
+  <div class="container">
+    {% if albums %}
+      <div class="row g-4">
+        {% for album in albums %}
+          <div class="col-md-6 col-lg-4">
+            <article class="news-card h-100">
+              {% if album.cover_image %}
+                {% include "partials/card_media.html" with image=album.cover_image href=album.get_absolute_url alt=album.title %}
+              {% elif album.photos.first %}
+                {% include "partials/card_media.html" with image=album.photos.first.image href=album.get_absolute_url alt=album.title %}
+              {% endif %}
+              <div class="news-card-body">
+                <h2 class="h5 mb-1"><a href="{{ album.get_absolute_url }}">{{ album.title }}</a></h2>
+                <p class="small text-secondary mb-0">{{ album.photos.count }} foto</p>
+              </div>
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p class="mb-0">Seidauk iha álbum publikadu.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

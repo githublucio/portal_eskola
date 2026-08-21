@@ -1,0 +1,31 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Papél no asesu{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">Papél no asesu</h1>
+    <p class="text-secondary mb-0">Fó asesu ba uza-na'in tuir papél. Super admin bele hadia izin CRUD kada papél.</p>
+  </div>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'accounts:dashboard_users' %}">Uza-na'in sira</a>
+</div>
+
+<div class="row g-3">
+  {% for role in roles %}
+    <div class="col-md-6 col-xl-4">
+      <a class="stat-card d-block h-100" href="{% url 'accounts:dashboard_roles_update' role.name %}">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+          <div class="stat-label">{{ role.label }}</div>
+          {% if role.locked %}
+            <span class="badge text-bg-secondary">Kompletu</span>
+          {% endif %}
+        </div>
+        <div class="stat-value">{{ role.member_count }}</div>
+        <div class="small text-secondary">uza-na'in · {{ role.permission_count }} izin</div>
+        <p class="small mb-0 mt-2">{{ role.description }}</p>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

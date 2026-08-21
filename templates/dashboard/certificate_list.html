@@ -1,0 +1,43 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Sertifikadu sira{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+  <h1 class="h3 mb-0">Sertifikadu sira</h1>
+  {% if can_add %}
+    <a class="btn btn-accent btn-sm" href="{% url 'academics:dashboard_certificate_create' %}">Emite</a>
+  {% endif %}
+</div>
+
+<div class="table-responsive info-panel p-0">
+  <table class="table table-sm align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Títulu</th>
+        <th>Estudante</th>
+        <th>Estadu</th>
+        <th>Emite</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in certificates %}
+        <tr>
+          <td>{{ c.certificate_number }}</td>
+          <td>{{ c.title }}</td>
+          <td>{{ c.student.full_name }}</td>
+          <td>{{ c.get_status_display }}</td>
+          <td>{{ c.issued_at|date:"d-m-Y"|default:"—" }}</td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'academics:certificate_print' c.pk %}">Imprime</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="text-secondary p-3">Laiha sertifikadu.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

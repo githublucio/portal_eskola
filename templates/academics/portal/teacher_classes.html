@@ -1,0 +1,24 @@
+{% extends "academics/portal/base.html" %}
+{% block portal_title %}Turma sira{% endblock %}
+{% block portal_subtitle %}{{ teacher.full_name }}{% endblock %}
+{% block portal_nav %}
+  <a class="btn btn-sm btn-accent" href="{% url 'academics:teacher_portal' %}">Portal</a>
+{% endblock %}
+{% block portal_content %}
+<h2 class="h5 mb-3">Hanesan diretór turma</h2>
+<ul class="mb-4">
+  {% for c in advised_classes %}
+    <li><a href="{% url 'academics:teacher_class_students' c.pk %}">{{ c.name }}</a> — {{ c.course.code }} ({{ c.academic_year }})</li>
+  {% empty %}
+    <li class="text-secondary">Laiha.</li>
+  {% endfor %}
+</ul>
+<h2 class="h5 mb-3">Aula (oráriu)</h2>
+<ul>
+  {% for c in teaching_classes %}
+    <li><a href="{% url 'academics:teacher_class_students' c.classroom_id %}">{{ c.classroom__name }}</a> — {{ c.classroom__course__code }} · {{ c.slots }} slot</li>
+  {% empty %}
+    <li class="text-secondary">Laiha.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
