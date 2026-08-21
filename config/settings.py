@@ -77,30 +77,44 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# Local/dev default: PostgreSQL. PythonAnywhere free: set DB_ENGINE=mysql
-DB_ENGINE = env("DB_ENGINE", default="django.db.backends.postgresql")
-if DB_ENGINE in {"mysql", "django.db.backends.mysql"}:
-    DB_ENGINE = "django.db.backends.mysql"
+# postgresql (local) | mysql (PA paid) | sqlite (PA free)
+_raw_engine = env("DB_ENGINE", default="postgresql").strip().lower()
+if _raw_engine in {"sqlite", "sqlite3", "django.db.backends.sqlite3"}:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": env("DB_NAME", default=str(BASE_DIR / "db.sqlite3")),
+        }
+    }
+elif _raw_engine in {"mysql", "django.db.backends.mysql"}:
     try:
         import pymysql
 
         pymysql.install_as_MySQLdb()
     except ImportError:
         pass
-
-DATABASES = {
-    "default": {
-        "ENGINE": DB_ENGINE,
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD"),
-        "HOST": env("DB_HOST", default="localhost"),
-        "PORT": env("DB_PORT", default="5432"),
-        "OPTIONS": {"charset": "utf8mb4"}
-        if DB_ENGINE == "django.db.backends.mysql"
-        else {},
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": env("DB_NAME"),
+            "USER": env("DB_USER"),
+            "PASSWORD": env("DB_PASSWORD"),
+            "HOST": env("DB_HOST", default="localhost"),
+            "PORT": env("DB_PORT", default="3306"),
+            "OPTIONS": {"charset": "utf8mb4"},
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env("DB_NAME"),
+            "USER": env("DB_USER"),
+            "PASSWORD": env("DB_PASSWORD"),
+            "HOST": env("DB_HOST", default="localhost"),
+            "PORT": env("DB_PORT", default="5432"),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
